@@ -112,7 +112,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/search_bar_todos"
             android:hint="Rechercher une salle"
-            android:textColor="#FFFF556E"
+            android:textColor="#DC445A"
             android:textColorHint="#606060"
             android:inputType="textMultiLine"
             android:textSize="20dp"
