@@ -1,4 +1,4 @@
-package com.example.luminy_lifi;
+package fr.luminy_lifi.app;
 
 import com.journeyapps.barcodescanner.CaptureActivity;
 

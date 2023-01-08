@@ -3,17 +3,16 @@ plugins {
 }
 
 android {
-    namespace 'com.example.luminy_lifi'
+    namespace 'fr.luminy_lifi.app'
     compileSdk 32
 
     defaultConfig {
-        applicationId "com.example.luminy_lifi"
+        applicationId "fr.luminy_lifi.app"
         minSdk 22
         targetSdk 32
         versionCode 1
         versionName "1.0"
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
