@@ -4,9 +4,11 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.animation.ObjectAnimator;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
@@ -20,7 +22,14 @@ import com.journeyapps.barcodescanner.ScanOptions;
 
 import java.util.ArrayList;
 
+import fr.luminy_lifi.app.zoom.ZoomageView;
+
 public class MainActivity extends AppCompatActivity {
+
+
+    public dataManager data;
+    public static MainActivity instance;
+    public int UserAtId= 0;
 
     private ListView listViewTodos;
 
@@ -35,9 +44,42 @@ public class MainActivity extends AppCompatActivity {
 
     Boolean isALLFABVisible;
 
+    public void defineNewUserAt(int id) {
+        dataManager.Point p = this.data.getPointById(id);
+        if( p != null) {
+            this.UserAtId = id;
+            ZoomageView view = findViewById(R.id.zoomable);
+            view.doubleTapDetected = true;
+
+            long downTime = SystemClock.uptimeMillis();
+            MotionEvent event = MotionEvent.obtain(
+                    downTime,
+                    downTime,
+                    MotionEvent.ACTION_DOWN,
+                    p.X,
+                    p.Y,
+                    0
+            );
+            view.longAnnim = true;
+            view.onTouchEvent(event);
+
+        } else {
+            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.instance);
+            builder.setTitle("Warn")
+                    .setMessage("Position id "+id+" incorrect.")
+                    .setPositiveButton("OK", null);
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        }
+
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        instance = this;
+
         setContentView(R.layout.activity_main);
 
         listViewTodos = findViewById(R.id.ListViewTodos);
@@ -95,6 +137,10 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+        this.data = new dataManager();
+        this.data.init();
+
     }
         private void scanCode()
         {
