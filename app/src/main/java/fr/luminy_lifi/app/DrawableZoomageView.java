@@ -108,21 +108,38 @@ public class DrawableZoomageView extends ZoomageView {
 
         if(MainActivity.instance.data != null) {
             if (!MainActivity.instance.data.getPoints().isEmpty()) {
-                for (dataManager.Point p : MainActivity.instance.data.getPoints()) {
-                    if (p instanceof dataManager.LocationPoint) {
-                        canvas.drawCircle(p.X * scaleX, p.Y * scaleY, 27, circleOuter);
-                        canvas.drawCircle(p.X * scaleX, p.Y * scaleY, 25, circleOut);
-                        canvas.drawCircle(p.X * scaleX, p.Y * scaleY, 15, circleIn);
-                    } else {
-                        canvas.drawCircle(p.X * scaleX, p.Y * scaleY, 10, circleIn);
+                if(MainActivity.instance.path != null) {
+                    dataManager.Point Last = null;
+                    for (dataManager.Point p : MainActivity.instance.path) {
+                        if(Last != null) {
+                            canvas.drawLine(p.X * scaleX, p.Y * scaleY, Last.X * scaleX, Last.Y * scaleY, line);
+                        }
+                        if (p instanceof dataManager.LocationPoint) {
+                            canvas.drawCircle(p.X * scaleX, p.Y * scaleY, 27, circleOuter);
+                            canvas.drawCircle(p.X * scaleX, p.Y * scaleY, 25, circleOut);
+                            canvas.drawCircle(p.X * scaleX, p.Y * scaleY, 15, circleIn);
+                        } else {
+                            canvas.drawCircle(p.X * scaleX, p.Y * scaleY, 10, circleIn);
+                        }
+                        Last = p;
                     }
-                    if (p.connectedPoint != null && p.connectedPoint.length > 0) {
-                        for (int id : p.connectedPoint) {
-                            dataManager.Point co = MainActivity.instance.data.getPointById(id);
-                            if (co != null) {
-                                canvas.drawLine(co.X * scaleX, co.Y * scaleY, p.X * scaleX, p.Y * scaleY, line);
-                            } else {
+                } else { // DEBUG ONLY
+                    for (dataManager.Point p : MainActivity.instance.data.getPoints()) {
+                        if (p instanceof dataManager.LocationPoint) {
+                            canvas.drawCircle(p.X * scaleX, p.Y * scaleY, 27, circleOuter);
+                            canvas.drawCircle(p.X * scaleX, p.Y * scaleY, 25, circleOut);
+                            canvas.drawCircle(p.X * scaleX, p.Y * scaleY, 15, circleIn);
+                        } else {
+                            canvas.drawCircle(p.X * scaleX, p.Y * scaleY, 10, circleIn);
+                        }
+                        if (p.connectedPoint != null && p.connectedPoint.length > 0) {
+                            for (int id : p.connectedPoint) {
+                                dataManager.Point co = MainActivity.instance.data.getPointById(id);
+                                if (co != null) {
+                                    canvas.drawLine(co.X * scaleX, co.Y * scaleY, p.X * scaleX, p.Y * scaleY, line);
+                                } else {
 
+                                }
                             }
                         }
                     }

@@ -46,6 +46,8 @@ public class MainActivity extends AppCompatActivity {
     public static MainActivity instance;
     public int UserAtId= 0;
 
+    public List<dataManager.Point> path = null;
+
 
 
     private ScaleGestureDetector scaleGestureDetector;
@@ -76,6 +78,13 @@ public class MainActivity extends AppCompatActivity {
             );
             view.longAnnim = true;
             view.onTouchEvent(event);
+            if(searchPointId != -1) {
+                if(searchPointId == UserAtId) {
+                    path = null;
+                } else {
+                    instance.path = PathUtils.findPathTo(p,data.getPointById(searchPointId));
+                }
+            }
 
         } else {
             AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.instance);
@@ -87,6 +96,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+
+    private int btnId1 = -1,btnId2 = -1,btnId3 = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,18 +113,33 @@ public class MainActivity extends AppCompatActivity {
                 findViewById(R.id.searchBarLayout).setVisibility(hasFocus ? View.VISIBLE : View.GONE);
             }
         });
-        findViewById(R.id.search_bar_todos).setOnKeyListener(new View.OnKeyListener() {
+
+
+        /*findViewById(R.id.zoomable).setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
+            public void onClick(View view) {
+                ((EditText)findViewById(R.id.search_bar_todos)).clearFocus();
+                if(findViewById(R.id.searchBarLayout).getVisibility() == View.VISIBLE)  {
+                    findViewById(R.id.searchBarLayout).setVisibility(View.GONE);
+                }
+            }
+        });*/
+        ((EditText)findViewById(R.id.search_bar_todos)).addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i0, int i1, int i2) {
                 if(data != null) {
-                    Log.i("OUIIIIIII", "keyinput "+keyCode);
                     List<dataManager.Point> point = data.getPoints();
 
                     List<dataManager.LocationPoint> toShow = new ArrayList<dataManager.LocationPoint>();
-                    String txt = ((EditText)v).getText().toString();
+                    String txt = ((EditText)findViewById(R.id.search_bar_todos)).getText().toString();
 
                     if(!point.isEmpty()) {
-                         if(!txt.replaceAll(" ", "").equals("")) {
+                        if(!txt.replaceAll(" ", "").equals("")) {
                             for (dataManager.Point p : point) {
                                 if (p instanceof dataManager.LocationPoint) {
                                     if (((dataManager.LocationPoint) p).Name.toLowerCase().contains(txt.toLowerCase())) {
@@ -124,11 +150,11 @@ public class MainActivity extends AppCompatActivity {
                         }
 
                     }
-                    Log.i("OUIIIIIII", txt +" - "+toShow.toString());
-
+                    findViewById(R.id.searchBarLayout).setVisibility(View.VISIBLE);
                     findViewById(R.id.search1).setVisibility(View.GONE);
                     findViewById(R.id.search2).setVisibility(View.GONE);
                     findViewById(R.id.search3).setVisibility(View.GONE);
+                    btnId1 = btnId2 = btnId3 = -1;
                     if(!toShow.isEmpty()) {
                         int i = 0;
                         for(dataManager.LocationPoint p:toShow) {
@@ -137,23 +163,50 @@ public class MainActivity extends AppCompatActivity {
                                 findViewById(R.id.search1).setVisibility(View.VISIBLE);
 
                                 ((Button)findViewById(R.id.search1)).setText(p.Name);
+                                btnId1 = p.ID;
                                 i++;
                             } else if(i == 1) {
                                 findViewById(R.id.search2).setVisibility(View.VISIBLE);
                                 findViewById(R.id.search2).setBackgroundColor(Color.rgb(238,238,238));
                                 ((Button)findViewById(R.id.search2)).setText(p.Name);
+                                btnId2 = p.ID;
                                 i++;
                             } else if(i == 2) {
                                 findViewById(R.id.search3).setVisibility(View.VISIBLE);
                                 //findViewById(R.id.search3).setBackgroundResource(R.drawable.stylbutton);
                                 findViewById(R.id.search3).setBackgroundColor(Color.rgb(238,238,238));
                                 ((Button)findViewById(R.id.search3)).setText(p.Name);
+                                btnId3 = p.ID;
                                 break;
                             }
                         }
                     }
                 }
-                return true;
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+
+        findViewById(R.id.search1).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                clickOnSearch(btnId1);
+            }
+        });
+        findViewById(R.id.search2).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                clickOnSearch(btnId2);
+            }
+        });
+        findViewById(R.id.search3).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                clickOnSearch(btnId3);
             }
         });
 
@@ -232,6 +285,25 @@ public class MainActivity extends AppCompatActivity {
         this.data.init();
 
     }
+    private int searchPointId = -1;
+    public void clickOnSearch(int id) {
+        if(id != -1) {
+            findViewById(R.id.search1).setVisibility(View.GONE);
+            findViewById(R.id.search2).setVisibility(View.GONE);
+            findViewById(R.id.search3).setVisibility(View.GONE);
+            ((EditText)findViewById(R.id.search_bar_todos)).setText("");
+            findViewById(R.id.searchBarLayout).setVisibility(View.GONE);
+            dataManager.Point p1 = data.getPointById(instance.UserAtId);
+            dataManager.Point p2 = data.getPointById(id);
+            if(p1 != null && p2 != null) {
+                searchPointId = id;
+                instance.path = PathUtils.findPathTo(p1, p2);
+                instance.defineNewUserAt(instance.UserAtId);
+            } else {
+                Log.i("ERROR POINT", "P1:"+p1+" ID:"+instance.UserAtId+" | P2:"+p2+" ID:"+id);
+            }
+        }
+    }
         private void scanCode()
         {
             ScanOptions options = new ScanOptions();
@@ -245,16 +317,10 @@ public class MainActivity extends AppCompatActivity {
         ActivityResultLauncher<ScanOptions> barLauncher = registerForActivityResult(new ScanContract(), result -> {
             if (result.getContents() != null)
             {
-                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                builder.setTitle("Result");
-                builder.setMessage(result.getContents());
-                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i)
-                    {
-                        dialogInterface.dismiss();
-                    }
-                }).show();
+                try {
+                    int id = Integer.parseInt(result.getContents());
+                    defineNewUserAt(id);
+                } catch(Exception e) {}
             }
         });
 
