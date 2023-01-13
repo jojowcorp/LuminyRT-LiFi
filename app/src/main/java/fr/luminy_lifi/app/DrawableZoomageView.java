@@ -12,6 +12,7 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.os.AsyncTask;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 
 
 import org.json.JSONArray;
@@ -29,8 +30,8 @@ import fr.luminy_lifi.app.zoom.ZoomageView;
 
 public class DrawableZoomageView extends ZoomageView {
 
-    private static Paint line, circleIn, circleOut, circleOuter, pointer;
-    public static float scaleX = 1.85F, scaleY = 1.85F;
+    private static final Paint line, circleIn, circleOut, circleOuter, pointer;
+    public static final float scaleX, scaleY;
     static {
         line = new Paint();
         line.setStrokeWidth(6F);
@@ -61,6 +62,13 @@ public class DrawableZoomageView extends ZoomageView {
         pointer.setStrokeCap(Paint.Cap.ROUND);
         pointer.setStyle(Paint.Style.FILL);
 
+
+        DisplayMetrics metrics = new DisplayMetrics();
+        MainActivity.instance.getWindowManager().getDefaultDisplay().getMetrics(metrics);
+
+        scaleX = scaleY = (metrics.heightPixels * 1.375F) / 2177F;
+        //functionsList.add(Pair(resources.getString(R.string.absolute_width), "${metrics.widthPixels}px"))
+        //functionsList.add(Pair(resources.getString(R.string.absolute_height), "${metrics.heightPixels}px"))
 
     }
 
