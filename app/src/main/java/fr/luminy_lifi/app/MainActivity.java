@@ -248,6 +248,15 @@ public class MainActivity extends AppCompatActivity {
             scanCode();
         });
 
+        addCalendar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, MainActivity3.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
         addContactFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -256,6 +265,8 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+
 
         addActionFab.setOnClickListener(new View.OnClickListener() {
             @Override
