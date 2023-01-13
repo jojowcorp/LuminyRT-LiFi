@@ -97,11 +97,12 @@
         android:id="@+id/zoomable"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="190dp"
         android:paddingBottom="250dp"
         android:src="@drawable/etage">
 
     </fr.luminy_lifi.app.DrawableZoomageView>
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -109,26 +110,57 @@
         android:orientation="vertical">
 
         <EditText
+            android:id="@+id/search_bar_todos"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/search_bar_todos"
+            android:layout_marginTop="0dp"
             android:hint="Rechercher une salle"
+            android:inputType="textMultiLine"
+            android:textAlignment="center"
             android:textColor="#DC445A"
             android:textColorHint="#606060"
-            android:inputType="textMultiLine"
-            android:textSize="20dp"
-            android:textAlignment="center"
-            android:layout_marginTop="22dp">
+            android:textSize="20dp">
 
         </EditText>
 
-
-        <ListView
+        <LinearLayout
+            android:id="@+id/searchBarLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/ListViewTodos">
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:visibility="gone">
 
-        </ListView>
+            <Button
+                android:id="@+id/search1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Button"
+                android:visibility="gone"
+                android:textColor="@android:color/black"
+                android:bottomRightRadius="20dp"
+                android:bottomLeftRadius="20dp"
+                android:topLeftRadius="20dp"
+                android:topRightRadius="20dp"
+                />
+
+            <Button
+                android:id="@+id/search2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Button"
+                android:visibility="gone"
+                android:textColor="@android:color/black"
+                />
+
+            <Button
+                android:id="@+id/search3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Button"
+                android:visibility="gone"
+                android:textColor="@android:color/black"/>
+        </LinearLayout>
+
 
     </LinearLayout>
 

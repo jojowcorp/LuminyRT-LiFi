@@ -5,15 +5,28 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.animation.ObjectAnimator;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.SearchView;
+import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -21,6 +34,8 @@ import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 import fr.luminy_lifi.app.zoom.ZoomageView;
 
@@ -31,9 +46,7 @@ public class MainActivity extends AppCompatActivity {
     public static MainActivity instance;
     public int UserAtId= 0;
 
-    private ListView listViewTodos;
 
-    private ArrayList<String> ListOfTodos = new ArrayList<>();
 
     private ScaleGestureDetector scaleGestureDetector;
     private float FACTOR = 1.0f;
@@ -43,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
     ExtendedFloatingActionButton addActionFab;
 
     Boolean isALLFABVisible;
+
 
     public void defineNewUserAt(int id) {
         dataManager.Point p = this.data.getPointById(id);
@@ -82,7 +96,83 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
-        listViewTodos = findViewById(R.id.ListViewTodos);
+        findViewById(R.id.search_bar_todos).setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                findViewById(R.id.searchBarLayout).setVisibility(hasFocus ? View.VISIBLE : View.GONE);
+            }
+        });
+        findViewById(R.id.search_bar_todos).setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if(data != null) {
+                    Log.i("OUIIIIIII", "keyinput "+keyCode);
+                    List<dataManager.Point> point = data.getPoints();
+
+                    List<dataManager.LocationPoint> toShow = new ArrayList<dataManager.LocationPoint>();
+                    String txt = ((EditText)v).getText().toString();
+
+                    if(!point.isEmpty()) {
+                         if(!txt.replaceAll(" ", "").equals("")) {
+                            for (dataManager.Point p : point) {
+                                if (p instanceof dataManager.LocationPoint) {
+                                    if (((dataManager.LocationPoint) p).Name.toLowerCase().contains(txt.toLowerCase())) {
+                                        toShow.add(((dataManager.LocationPoint) p));
+                                    }
+                                }
+                            }
+                        }
+
+                    }
+                    Log.i("OUIIIIIII", txt +" - "+toShow.toString());
+
+                    findViewById(R.id.search1).setVisibility(View.GONE);
+                    findViewById(R.id.search2).setVisibility(View.GONE);
+                    findViewById(R.id.search3).setVisibility(View.GONE);
+                    if(!toShow.isEmpty()) {
+                        int i = 0;
+                        for(dataManager.LocationPoint p:toShow) {
+                            if(i == 0) {
+                                findViewById(R.id.search1).setBackgroundColor(Color.rgb(238,238,238));
+                                findViewById(R.id.search1).setVisibility(View.VISIBLE);
+
+                                ((Button)findViewById(R.id.search1)).setText(p.Name);
+                                i++;
+                            } else if(i == 1) {
+                                findViewById(R.id.search2).setVisibility(View.VISIBLE);
+                                findViewById(R.id.search2).setBackgroundColor(Color.rgb(238,238,238));
+                                ((Button)findViewById(R.id.search2)).setText(p.Name);
+                                i++;
+                            } else if(i == 2) {
+                                findViewById(R.id.search3).setVisibility(View.VISIBLE);
+                                //findViewById(R.id.search3).setBackgroundResource(R.drawable.stylbutton);
+                                findViewById(R.id.search3).setBackgroundColor(Color.rgb(238,238,238));
+                                ((Button)findViewById(R.id.search3)).setText(p.Name);
+                                break;
+                            }
+                        }
+                    }
+                }
+                return true;
+            }
+        });
+
+
+
+     /*   searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });*/
+
+
+/////////////////////////////////////////
 
         addContactFab = findViewById(R.id.add_contact);
         addLocationFab = findViewById(R.id.add_location);

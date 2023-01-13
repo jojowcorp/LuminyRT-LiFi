@@ -30,7 +30,7 @@ import fr.luminy_lifi.app.zoom.ZoomageView;
 public class DrawableZoomageView extends ZoomageView {
 
     private static Paint line, circleIn, circleOut, circleOuter, pointer;
-    public static float scaleX = 1.375F, scaleY = 1.375F;
+    public static float scaleX = 1.85F, scaleY = 1.85F;
     static {
         line = new Paint();
         line.setStrokeWidth(6F);
