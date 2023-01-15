@@ -399,7 +399,7 @@ public class MainActivity extends AppCompatActivity {
         if(p != null) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Emploie du temps");
-            builder.setMessage("Vous avez cours maintenant en "+p.Name+", voulez vous vous y rendre ?");
+            builder.setMessage("Vous avez cours maintenant en "+p.Name+", voulez-vous vous y rendre ?");
             dataManager.LocationPoint finalP = p;
             builder.setPositiveButton("Oui", new DialogInterface.OnClickListener() {
                 @Override
