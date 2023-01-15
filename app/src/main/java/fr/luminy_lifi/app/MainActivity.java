@@ -8,6 +8,7 @@ import android.animation.ObjectAnimator;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -33,6 +34,15 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
 
+import net.fortuna.ical4j.model.Calendar;
+import net.fortuna.ical4j.model.Component;
+import net.fortuna.ical4j.model.Property;
+
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -59,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
 
     Boolean isALLFABVisible;
 
+    private Calendar cal = null;
 
     public void defineNewUserAt(int id) {
         dataManager.Point p = this.data.getPointById(id);
@@ -106,6 +117,7 @@ public class MainActivity extends AppCompatActivity {
         instance = this;
 
         setContentView(R.layout.activity_main);
+
 
         findViewById(R.id.search_bar_todos).setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -351,6 +363,61 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         }
+
+    public void updateCalendar(Calendar cal) {
+            this.cal = cal;
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss'Z'");
+        ZoneId zoneId = ZoneId.of("Europe/Paris");
+        Duration duration = Duration.ofMinutes(10);
+        ZonedDateTime now = ZonedDateTime.now(zoneId);
+        dataManager.LocationPoint p = null;
+        for (Component component : cal.getComponents()) {
+            if (component.getName().equals("VEVENT")) {
+                Property start = component.getProperty("DTSTART");
+                Property location = component.getProperty("LOCATION");
+
+                LocalDateTime dateTime = LocalDateTime.parse(start.getValue(), formatter);
+                ZonedDateTime eventStart = ZonedDateTime.of(dateTime, zoneId);
+
+                if(eventStart.isAfter(now.minus(duration)) && eventStart.isBefore(now.plus(duration))) {
+                    for(dataManager.Point p3 :data.getPoints()) {
+                        if(p3 instanceof dataManager.LocationPoint) {
+                            String name = ((dataManager.LocationPoint)p).Name;
+                            System.out.println("Compare: "+name+" "+location.getValue()+" "+name.toLowerCase().contains(location.getValue().toLowerCase()));
+                            if(name.toLowerCase().contains(location.getValue().toLowerCase())) {
+                                p = (dataManager.LocationPoint) p3;
+                                break;
+                            }
+                        }
+                    }
+
+                }
+
+            }
+        }
+        if(p != null) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Emploie du temps");
+            builder.setMessage("Vous avez cours maintenant en "+p.Name+", voulez vous vous y rendre ?");
+            dataManager.LocationPoint finalP = p;
+            builder.setPositiveButton("Oui", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dataManager.Point p1 = data.getPointById(instance.UserAtId);
+                    instance.path = PathUtils.findPathTo(p1, finalP);
+                    instance.defineNewUserAt(instance.UserAtId);
+                }
+            });
+            builder.setNegativeButton("Non", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                }
+            });
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        }
+    }
 
 
 }

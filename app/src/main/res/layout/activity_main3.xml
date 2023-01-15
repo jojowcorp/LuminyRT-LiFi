@@ -11,7 +11,7 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Calendrier"
+        android:text="Emploie du temps"
         android:textSize="30sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -25,11 +25,11 @@
     <!-- parent FAB-->
 
     <EditText
-        android:id="@+id/search_bar_todos"
+        android:id="@+id/url_calendar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
-        android:hint="texte a modifier"
+        android:hint="Url du calendrier .ICS"
         android:inputType="textMultiLine"
         android:textAlignment="center"
         android:textColor="#DC445A"
@@ -43,18 +43,29 @@
     </EditText>
 
     <TextView
-        android:id="@+id/textView2"
-        android:layout_width="373dp"
-        android:layout_height="169dp"
+        android:id="@+id/url_calendar_info"
+        android:layout_width="388dp"
+        android:layout_height="31dp"
+        android:layout_marginTop="32dp"
+        android:text="Aucun calendrier enregistré"
+
+        android:textAlignment="center"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="@+id/url_calendar_tuto"
+        app:layout_constraintTop_toBottomOf="@+id/url_calendar" />
+
+    <TextView
+        android:id="@+id/url_calendar_tuto"
+        android:layout_width="383dp"
+        android:layout_height="441dp"
         android:gravity="center"
-        android:text="Mauris tincidunt, sapien in auctor bibendum, nibh elit tincidunt eros, id volutpat massa metus nec magna. Suspendisse scelerisque ante mi, vel posuere metus rutrum in. Sed et consequat felis. Proin vitae arcu interdum quam auctor scelerisque eu sed odio."
+        android:text="Pour obtenir l'URL de votre emploi du temps, rendez-vous sur celui-ci, sélectionnez votre classe dans la 'LISTE DES RESSOURCES' à gauche de l'écran. Ensuite en bas de celui-ci dans 'OPTIONS', cliquez sur le bouton 'Export Agenda'. Dans ce menu, sélectionner vos dates de début et de fin, la case ICalendar doit être cochée, et exportez l'URL"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.578"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.581" />
+        app:layout_constraintVertical_bias="0.944" />
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/btn_retour_3"

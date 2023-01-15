@@ -1,6 +1,7 @@
 package fr.luminy_lifi.app;
 
 import android.app.AlertDialog;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.widget.EditText;
@@ -177,6 +178,11 @@ public class dataManager {
         protected void onPostExecute(List<Point> result) {
             MainActivity.instance.data.setPoints(result);
             MainActivity.instance.defineNewUserAt(1);
+            SharedPreferences sharedPreferences = MainActivity.instance.getPreferences(MainActivity.MODE_PRIVATE);
+            if(sharedPreferences.contains("url_calendar")) {
+                String url = sharedPreferences.getString("url_calendar", "");
+                new MainActivity3.downloadCalendar().execute(url);
+            }
         }
     }
 
