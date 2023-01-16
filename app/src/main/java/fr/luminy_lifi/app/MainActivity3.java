@@ -1,8 +1,10 @@
 package fr.luminy_lifi.app;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -11,6 +13,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
@@ -37,6 +40,8 @@ import java.util.List;
 public class MainActivity3 extends AppCompatActivity {
 
     public static MainActivity3 instance;
+
+
 
     ExtendedFloatingActionButton addBtn_retour;
 
@@ -78,6 +83,8 @@ public class MainActivity3 extends AppCompatActivity {
 
             }
         });
+
+
 
         addBtn_retour = findViewById(R.id.btn_retour_3);
 

@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    style="@style/SCREEN"
     tools:context=".MainActivity3">
 
 
@@ -13,6 +14,7 @@
         android:layout_height="wrap_content"
         android:text="Emploi du temps"
         android:textSize="30sp"
+        style="@style/TEXT"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -48,7 +50,7 @@
         android:layout_height="31dp"
         android:layout_marginTop="32dp"
         android:text="Aucun calendrier enregistré"
-
+        style="@style/TEXT"
         android:textAlignment="center"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="@+id/url_calendar_tuto"
@@ -61,6 +63,7 @@
         android:gravity="center"
         android:text="Pour obtenir l'URL de votre emploi du temps, rendez-vous sur celui-ci, sélectionnez votre classe dans la 'LISTE DES RESSOURCES' à gauche de l'écran. Ensuite en bas de celui-ci dans 'OPTIONS', cliquez sur le bouton 'Export Agenda'. Dans ce menu, sélectionner vos dates de début et de fin, la case ICalendar doit être cochée, et exportez l'URL"
         android:textSize="20sp"
+        style="@style/TEXT"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

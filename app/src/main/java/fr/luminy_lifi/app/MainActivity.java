@@ -3,9 +3,11 @@ package fr.luminy_lifi.app;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 
 import android.animation.ObjectAnimator;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -71,6 +73,11 @@ public class MainActivity extends AppCompatActivity {
 
     private Calendar cal = null;
 
+    //
+
+
+    //
+
     public void defineNewUserAt(int id) {
         dataManager.Point p = this.data.getPointById(id);
         if( p != null) {
@@ -110,11 +117,45 @@ public class MainActivity extends AppCompatActivity {
 
     private int btnId1 = -1,btnId2 = -1,btnId3 = -1;
 
+    private boolean isSombre = false;
+    public SharedPreferences sharedPrefSombre;
+    SharedPreferences.Editor editor;
+
+    public void setSombre(boolean v) {
+        this.isSombre = v;
+        AppCompatDelegate.setDefaultNightMode(v ? AppCompatDelegate.MODE_NIGHT_NO : AppCompatDelegate.MODE_NIGHT_YES);
+        editor = sharedPrefSombre.edit();
+        editor.putBoolean("sombre", v);
+        editor.apply();
+    }
+
+    public boolean isSombre() {
+        return this.isSombre;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         instance = this;
+        sharedPrefSombre = getSharedPreferences("Mode", Context.MODE_PRIVATE);
+        // Le mode par default est le thème de jour
+        boolean nightMode = sharedPrefSombre.getBoolean("sombre", false);
+        this.isSombre = nightMode;
+        if (isSombre) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+            editor = sharedPrefSombre.edit();
+            editor.putBoolean("sombre", true);
+            editor.apply();
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+            editor = sharedPrefSombre.edit();
+            editor.putBoolean("sombre", false);
+            editor.apply();
+        }
+
+
+
 
         setContentView(R.layout.activity_main);
 
@@ -126,7 +167,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //
 
+        /*AppCompatDelegate.setDefaultNightMode(MainActivity4.);*/
+
+        //
         /*findViewById(R.id.zoomable).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -224,20 +269,6 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-     /*   searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                return false;
-            }
-        });*/
-
-
-/////////////////////////////////////////
 
         addContactFab = findViewById(R.id.add_contact);
         addLocationFab = findViewById(R.id.add_location);
@@ -264,6 +295,15 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, MainActivity3.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+        addSetting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, MainActivity4.class);
                 startActivity(intent);
                 finish();
             }

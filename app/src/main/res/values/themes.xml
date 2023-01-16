@@ -13,4 +13,21 @@
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
     </style>
+
+    <!-- Background Si le mode light est activé -->
+    <style name="SCREEN">
+        <item name="android:background">@color/white</item>
+    </style>
+
+    <!-- Text Si le mode light est activé -->
+    <style name="TEXT">
+        <item name="android:textColor">@color/text</item>
+    </style>
+
+    <!-- IMAGE Si le mode light est activé -->
+    <style name="IMAGE">
+        <item name="android:src">@drawable/etage</item>
+    </style>
+
+
 </resources>
