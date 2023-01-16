@@ -123,7 +123,7 @@ public class DrawableZoomageView extends ZoomageView {
                         }
                         Last = p;
                     }
-                } else { // DEBUG ONLY
+                } /*else { // DEBUG ONLY
                     for (dataManager.Point p : MainActivity.instance.data.getPoints()) {
                         if (p instanceof dataManager.LocationPoint) {
                             canvas.drawCircle(p.X * scaleX, p.Y * scaleY, 27, circleOuter);
@@ -143,7 +143,7 @@ public class DrawableZoomageView extends ZoomageView {
                             }
                         }
                     }
-                }
+                }*/
                 if (MainActivity.instance.UserAtId != 0) {
                     dataManager.Point co = MainActivity.instance.data.getPointById(MainActivity.instance.UserAtId);
                     if (co != null) {
