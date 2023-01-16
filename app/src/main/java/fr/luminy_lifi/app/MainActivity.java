@@ -49,9 +49,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
+import android.os.Bundle;
+import android.app.Activity;
+import android.widget.TextView;
+
 import fr.luminy_lifi.app.zoom.ZoomageView;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SensorEventListener {
 
 
     public dataManager data;
@@ -73,10 +81,9 @@ public class MainActivity extends AppCompatActivity {
 
     private Calendar cal = null;
 
-    //
+    private SensorManager mSensorManager;
+    private Sensor mLight;
 
-
-    //
 
     public void defineNewUserAt(int id) {
         dataManager.Point p = this.data.getPointById(id);
@@ -138,6 +145,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         instance = this;
+
+
+        mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        // Obtenir une référence au capteur de luminosité
+        mLight = mSensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
+
         sharedPrefSombre = getSharedPreferences("Mode", Context.MODE_PRIVATE);
         // Le mode par default est le thème de jour
         boolean nightMode = sharedPrefSombre.getBoolean("sombre", false);
@@ -393,7 +406,57 @@ public class MainActivity extends AppCompatActivity {
             return super.onTouchEvent(event);
         }
 
-        class ScaleListner extends ScaleGestureDetector.SimpleOnScaleGestureListener{
+    private static final int THRESHOLD = 50; // seuil de luminosité pour détecter un signal
+    private static final int PULSE_WIDTH = 50; // largeur d'impulsion pour détecter un signal
+
+    private long pulseStart = 0; // timestamp de début de l'impulsion
+    private long pulseEnd = 0; // timestamp de fin de l'impulsion
+
+    @Override
+    public final void onSensorChanged(SensorEvent event) {
+        // Lire les données du capteur de luminosité
+        float light = event.values[0];
+        long timestamp = event.timestamp;
+
+        // Traiter les données Li-Fi
+        if (light > THRESHOLD) {
+            // Luminosité supérieure au seuil, donc début d'une impulsion
+            pulseStart = timestamp;
+        } else {
+            // Luminosité inférieure au seuil, donc fin d'une impulsion
+            pulseEnd = timestamp;
+
+            // Calculer la durée de l'impulsion
+            long pulseDuration = pulseEnd - pulseStart;
+
+            if (pulseDuration > PULSE_WIDTH) {
+                // Durée d'impulsion supérieure à la largeur d'impulsion, donc signal de "1"
+                // Traitement pour signal de "1" ici
+                Log.i("LI-FI", "Pule (nano): "+pulseDuration);
+            }
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int i) {
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Enregistrer cette activité pour recevoir des mises à jour de l'événement
+        mSensorManager.registerListener(this, mLight, SensorManager.SENSOR_DELAY_NORMAL);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        // Désactiver les mises à jour de l'événement
+        mSensorManager.unregisterListener(this);
+    }
+
+    class ScaleListner extends ScaleGestureDetector.SimpleOnScaleGestureListener{
             @Override
             public boolean onScale(ScaleGestureDetector detector) {
                 FACTOR *= detector.getScaleFactor();
