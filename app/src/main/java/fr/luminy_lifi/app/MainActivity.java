@@ -394,7 +394,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             if (result.getContents() != null)
             {
                 try {
-                    int id = Integer.parseInt(result.getContents());
+                    int id = Integer.parseInt(result.getContents().replace("\n", ""));
                     defineNewUserAt(id);
                 } catch(Exception e) {}
             }
